@@ -1,0 +1,15 @@
+.element {
+  width: 200px;
+  height: 200px;
+  background: red;
+  margin: 100px auto;
+  transition: background 2s, transform 2s 1s linear /*ease*/;
+  /*transform-origin: left upper;*/ /*domyslnie lewy gorny*/
+}
+
+.element:hover {
+  background: blue;
+  transform: rotate(90deg);
+  transform: scale(1.5);
+  /*transform-origin: right bottom;*/
+}
