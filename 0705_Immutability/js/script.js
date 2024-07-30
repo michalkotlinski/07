@@ -1,58 +1,90 @@
-const string = "tekst";
+{
+    const tasks = [
+        {
+            content: "sformatować odpowiednio",
+            done: true,
+        },
+        {
+            content: "cieszyć się",
+            done: false,
+        },
+    ];
 
-const upperCased = string.toUpperCase();
+    const addNewTask = (newTaskContent) => {
+        tasks.push({
+            content: newTaskContent,
+            done: false,
+        });
+        render();
+    };
 
-console.log(upperCased);
-console.log(string);
+    const removeTask = (taskIndex) => {
+        tasks.splice(taskIndex, 1);
+        render();
+    };
 
-const number = 5.05444;
+    const toogleTaskDone = (taskIndex) => {
+        tasks[taskIndex].done = !tasks[taskIndex].done;
+        render();
+    };
 
-const numberFormatted = number.toFixed();
-console.log(numberFormatted);
+    const bindEvents = () => {
+        const removeButtonsElements = document.querySelectorAll(".js-section_button--remove");
 
-const person = { name: "Michał" };
+        removeButtonsElements.forEach((removeButton, index) =>{
+            removeButton.addEventListener("click", () => {
+                removeTask(index);
+            });
+        });
 
-person.name = "Krzysiek";
-console.log(person.name);
-console.log(person);
-person.surname = "Dąbrowski";
-console.log(person);
+        const toggleButtonsDone = document.querySelectorAll(".js-done");
 
-const cars = ["beemka"];
-console.log(cars);
-cars.push("merc");
-console.log(cars);
-cars.pop(); //usuwanie ostatniego elementu z tablicy
-console.log(cars);
+        toggleButtonsDone.forEach((toggleButtonDone, index) => {
+            toggleButtonDone.addEventListener("click", () => {
+                toogleTaskDone(index);
+            });
+        });
+    };
 
-//praca z tablicami i obiektami bez mutowania
+    const render = () => {
+        let htmlString = "";
 
-const personOrig = {
-  name: "Michał",
-  surname: "Kotliński",
+        for (const task of tasks) {
+            htmlString += `
+                <li class="section__listItem ${task.done ? "section__listItem--done\"" : "\""}>
+                    <button class="section__button section__button--done js-done">${task.done ? "&#10004;" : ""}</button> 
+                    <span class="section__listItemText ${task.done ? "section__listItemText--done\"" : "\""}">${task.content}</span>
+                    <button class="section__button section__button--remove js-section_button--remove">&#10006;</button>
+                </li>
+            `;
+        }
+
+        document.querySelector(".js-section__list").innerHTML = htmlString;
+
+        bindEvents();
+    }
+
+    const onFormSubmit = (event) => {
+        event.preventDefault();
+
+        const newTaskElement = document.querySelector(".js-form__input");
+        const newTaskContent = newTaskElement.value.trim();
+
+        if (newTaskContent !== "") {
+            addNewTask(newTaskContent);
+            newTaskElement.value= "";
+        }
+        
+        newTaskElement.focus();
+    };
+
+    const init = () => {
+        render();
+
+        const formElement = document.querySelector(".js-form");
+
+        formElement.addEventListener("submit", onFormSubmit);
+    };
+
+    init();
 };
-
-const updatedPerson = {
-  ...personOrig,
-  name: "Ernest",
-};
-
-console.log(personOrig);
-console.log(updatedPerson);
-
-const updatedPersonWithAge = {
-  ...updatedPerson,
-  age: 47,
-};
-
-console.log(updatedPersonWithAge);
-
-const { name, ...personWithoutName } = person;
-console.log(person);
-console.log(personWithoutName);
-console.log(person);
-
-const tasks = [
-  { title: "zmontować lekcję", done: false },
-  { title: "zasadzić dzrewo", done: true },
-];
